@@ -1,0 +1,11 @@
+export default [
+    { "_id": "A101", "title": "Propulsion Assignment", "course": "RS101", "module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 3rd", "points": "100", "description": "Submit a link to your landing page on Netlify."},
+    { "_id": "A102", "title": "Combustion Analysis", "course": "RS101","module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 1st", "points": "100", "description": "Submit a link to your landing page on Netlify." },
+    { "_id": "A103", "title": "Nozzle Design Project", "course": "RS101","module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 3rd", "points": "100", "description": "Submit a link to your landing page on Netlify." },
+    { "_id": "A104", "title": "Aerodynamics Quiz", "course": "RS102","module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 3rd", "points": "100", "description": "Submit a link to your landing page on Netlify." },
+    { "_id": "A105", "title": "Flow Analysis", "course": "RS102","module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 3rd", "points": "100", "description": "Submit a link to your landing page on Netlify." },
+    { "_id": "A106", "title": "Heating Analysis", "course": "RS102","module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 3rd", "points": "100", "description": "Submit a link to your landing page on Netlify." },
+    { "_id": "A107", "title": "Structural Design Task", "course": "RS103","module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 12th", "points": "100", "description": "Submit a link to your landing page on Netlify." },
+    { "_id": "A108", "title": "Orbital Calculations", "course": "RS103", "module": "Multiple Modules",  "available": "Feb 14th", "due": "Feb 20th", "points": "150", "description": "Submit a link to your landing page on Netlify."},
+    { "_id": "A109", "title": "Systems Engineering Exam", "course": "RS103", "module": "Multiple Modules",  "available": "Jan 31st", "due": "Feb 27th", "points": "100", "description": "Submit a link to your landing page on Netlify." }
+  ]
