@@ -26,34 +26,39 @@ import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import AssignmentRoutes from './Kambaz/Assignments/routes.js';
 import EnrollmentRoutes from './Kambaz/Enrollments/routes.js';
 const app = express();
-// app.use(cors({
-//     origin: process.env.NETLIFY_URL || "http://localhost:5173",
-//     credentials: true
-//   }));
 app.use(cors({
-    origin: "https://a5michaelm.netlify.app", 
-    credentials: true                         
+    origin: process.env.NETLIFY_URL || "http://localhost:5173",
+    credentials: true
   }));
-  
 app.use(express.json());
+app.use(
+  session({
+    secret: "kambaz", resave: false,
+    saveUninitialized: false, cookie: {
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "none"
+      }
+      })
+);
+
+
+// app.use(cors({
+//   origin: "https://a5michaelm.netlify.app", 
+//   credentials: true
+// }));
+
 // app.use(
 //   session({
-//     secret: "kambaz", resave: false,
-//     saveUninitialized: false, cookie: {
-//         secure: process.env.NODE_ENV === "production",
-//         sameSite: "none"
-//       }
-//       })
+//     secret: "kambaz",
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       sameSite: "none",  
+//       secure: true       
+//     }
+//   })
 // );
-app.use(session({
-    secret: process.env.SESSION_SECRET || "kambaz",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: true,       
-      sameSite: "none"    
-    }
-  }));
+
   
 CourseRoutes(app);
 UserRoutes(app);
