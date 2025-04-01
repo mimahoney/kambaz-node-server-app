@@ -38,7 +38,7 @@ app.use(express.json());
 app.use(
   session({
     secret: "kambaz", resave: false,
-    saveUninitialized: false, cookie: { secure: false }})
+    saveUninitialized: false, cookie: { secure: false, sameSite: "none" }})
 );
 CourseRoutes(app);
 UserRoutes(app);
