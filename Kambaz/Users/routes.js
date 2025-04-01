@@ -53,32 +53,22 @@ export default function UserRoutes(app) {
   };
 
 
-  //  const findCoursesForEnrolledUser = (req, res) => {
-  //   let { userId } = req.params;
-  //   if (userId === "current") {
-  //     const currentUser = req.session["currentUser"];
-  //     if (!currentUser) {
-  //       res.sendStatus(401);
-  //       return;
-  //     }
-  //     userId = currentUser._id;y
-  //   }
-  //   const courses = courseDao.findCoursesForEnrolledUser(userId);
-  //   res.json(courses);
-  // };
-  // app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
-  
-  const findCoursesForEnrolledUser = (req, res) => {
-    const { userId } = req.params;
-    // Optionally, you can add a check here if you want to ensure userId is provided:
-    if (!userId) {
-      return res.status(400).json({ error: "User ID is required" });
+   const findCoursesForEnrolledUser = (req, res) => {
+    let { userId } = req.params;
+    if (userId === "current") {
+      const currentUser = req.session["currentUser"];
+      if (!currentUser) {
+        res.sendStatus(401);
+        return;
+      }
+      userId = currentUser._id;y
     }
     const courses = courseDao.findCoursesForEnrolledUser(userId);
     res.json(courses);
   };
   app.get("/api/users/:userId/courses", findCoursesForEnrolledUser);
   
+
 
   const signout = (req, res) => {
     req.session.destroy();
