@@ -28,9 +28,7 @@ import EnrollmentRoutes from './Kambaz/Enrollments/routes.js';
 const app = express();
 app.use(cors({
     origin: [
-        process.env.NETLIFY_URL,
-        "http://localhost:5173",
-        "https://a5michaelm.netlify.app"
+        process.env.NETLIFY_URL
       ],      
   credentials: true                 
 }));
@@ -38,7 +36,7 @@ app.use(express.json());
 app.use(
   session({
     secret: "kambaz", resave: false,
-    saveUninitialized: false, cookie: { secure: false, sameSite: "none" }})
+    saveUninitialized: false, cookie: { secure: true, sameSite: "none" }})
 );
 CourseRoutes(app);
 UserRoutes(app);
