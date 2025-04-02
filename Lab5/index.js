@@ -9,9 +9,6 @@ export default function Lab5(app) {
   app.get("/lab5", (req, res) => {
     res.send("Welcome to Lab 5!");
   });  
-  app.get("/lab5/assignment", (req, res) => {
-  res.send("This is the Lab 5 Assignment endpoint.");
-});
 
   PathParameters(app);
   QueryParameters(app);
