@@ -27,7 +27,7 @@ import ModuleRoutes from "./Kambaz/Modules/routes.js";
 import AssignmentRoutes from './Kambaz/Assignments/routes.js';
 import EnrollmentRoutes from './Kambaz/Enrollments/routes.js';
 
-import session from "express-session";
+
 const app = express();
 app.use(
   cors({
