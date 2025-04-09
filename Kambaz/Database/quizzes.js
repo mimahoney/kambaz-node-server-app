@@ -1,4 +1,4 @@
-[
+export default [
     {
       "_id": "q101",
       "title": "Sample Quiz",
