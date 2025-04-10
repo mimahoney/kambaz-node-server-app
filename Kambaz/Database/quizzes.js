@@ -17,7 +17,7 @@ export default [
       "due": "2025-04-18",
       "available": "2025-03-01",
       "availableUntil": "2025-04-20",
-      "course": "R101"
+      "course": "RS101"
     }
   ]
   

@@ -8,6 +8,7 @@ export default function QuizRoutes(app) {
 
   app.get("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
+    console.log("hi");
     const quizzes = dao.findQuizzesForCourse(courseId);
     res.json(quizzes);
   });
