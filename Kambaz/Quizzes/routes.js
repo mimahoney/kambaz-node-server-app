@@ -6,6 +6,12 @@ export default function QuizRoutes(app) {
     res.send(quizzes);
   });
 
+  app.get("/api/quizzes/new", (req, res) => {
+    const { courseId } = req.params;
+    const newQuiz = dao.createQuiz({ ...req.body, course: courseId });
+    res.send(newQuiz);
+  });
+
   app.get("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
     console.log("hi");
