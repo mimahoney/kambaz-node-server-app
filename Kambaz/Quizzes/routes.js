@@ -44,4 +44,15 @@ export default function QuizRoutes(app) {
       res.status(404).send({ error: "Couldn't find quiz" });
     }
   });
+
+  app.put("/api/quizzes/:quizId/publish", (req, res) => {
+    const { quizId } = req.params;
+    const result = dao.togglePublishQuiz(quizId);
+    if (result.success) {
+      res.send(result);
+    } else {
+      res.status(400).send(result);
+    }
+  });  
 }
+

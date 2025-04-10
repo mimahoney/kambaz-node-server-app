@@ -1,5 +1,6 @@
 import Database from "../Database/index.js";
 import { v4 as uuidv4 } from "uuid";
+import * as userDao from "../Users/dao.js";
 
 function isFaculty() {
   const user = Database.currentUser;
@@ -11,9 +12,16 @@ export function findAllQuizzes() {
 }
 
 export function findQuizzesForCourse(courseId) {
+  // console.log(isFaculty());
+  // if (isFaculty()) {
+  //   return Database.quizzes.filter((quiz) => quiz.course === courseId);
+  // } else {
+  //   return Database.quizzes.filter(
+  //     (quiz) => quiz.course === courseId && quiz.published
+  //   );
+  // }
   return Database.quizzes.filter((quiz) => quiz.course === courseId);
 }
-
 export function findQuizById(quizId) {
   return Database.quizzes.find((quiz) => quiz._id === quizId);
 }
