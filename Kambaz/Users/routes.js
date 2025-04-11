@@ -3,7 +3,10 @@ import * as courseDao from "../Courses/dao.js";
 import * as enrollmentsDao from "../Enrollments/dao.js";
 // let currentUser = null;
 export default function UserRoutes(app) {
-  const createUser = async (req, res) => { };
+  const createUser = async (req, res) => {
+    const user = await dao.createUser(req.body);
+    res.json(user);
+  };
   const deleteUser = async (req, res) => {
     const status = await dao.deleteUser(req.params.userId);
     res.json(status);
@@ -113,6 +116,7 @@ export default function UserRoutes(app) {
     res.json(currentUser);
   };
 
+  
 
   app.post("/api/users", createUser);
   app.get("/api/users", findAllUsers);
