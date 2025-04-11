@@ -11,13 +11,13 @@ export default function QuizRoutes(app) {
     const newQuiz = dao.createQuiz({ ...req.body, course: courseId });
     res.send(newQuiz);
   });
-
   app.get("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
-    console.log("hi");
-    const quizzes = dao.findQuizzesForCourse(courseId);
+    const user = req.session.currentUser; 
+    const quizzes = dao.findQuizzesForCourse(courseId, user);
     res.json(quizzes);
   });
+  
 
   app.post("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
@@ -51,14 +51,12 @@ export default function QuizRoutes(app) {
     }
   });
 
-  app.put("/api/quizzes/:quizId/publish", (req, res) => {
+  app.put("/api/quizzes/:quizId/toggle", (req, res) => {
     const { quizId } = req.params;
-    const result = dao.togglePublishQuiz(quizId);
-    if (result.success) {
-      res.send(result);
-    } else {
-      res.status(400).send(result);
-    }
-  });  
+    const user = req.session.currentUser; 
+    const result = dao.togglePublishQuiz(quizId, user);
+    res.json(result);
+  });
+   
 }
 

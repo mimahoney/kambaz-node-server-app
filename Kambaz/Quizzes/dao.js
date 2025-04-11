@@ -1,27 +1,23 @@
 import Database from "../Database/index.js";
 import { v4 as uuidv4 } from "uuid";
-import * as userDao from "../Users/dao.js";
 
-function isFaculty() {
-  const user = Database.currentUser;
-  return user && user.role === "Faculty";
+function isFaculty(user) {
+  return user?.role === "Faculty";
 }
+
+export function findQuizzesForCourse(courseId, user) {
+  if (user?.role === "Faculty") {
+    return Database.quizzes.filter((q) => q.course === courseId);
+  } else {
+    return Database.quizzes.filter((q) => q.course === courseId && q.published);
+  }
+}
+
 
 export function findAllQuizzes() {
   return Database.quizzes;
 }
 
-export function findQuizzesForCourse(courseId) {
-  // console.log(isFaculty());
-  // if (isFaculty()) {
-  //   return Database.quizzes.filter((quiz) => quiz.course === courseId);
-  // } else {
-  //   return Database.quizzes.filter(
-  //     (quiz) => quiz.course === courseId && quiz.published
-  //   );
-  // }
-  return Database.quizzes.filter((quiz) => quiz.course === courseId);
-}
 export function findQuizById(quizId) {
   return Database.quizzes.find((quiz) => quiz._id === quizId);
 }
@@ -53,16 +49,22 @@ export function deleteQuiz(quizId) {
 }
 
 
-export function togglePublishQuiz(quizId) {
+export function togglePublishQuiz(quizId, user) {
   const quiz = Database.quizzes.find((q) => q._id === quizId);
 
-  if (!quiz) return { success: false, message: "Quiz not found." };
-
-  if (!isFaculty()) {
+  if (!quiz) {
+    return { success: false, message: "Quiz not found." };
+  }
+console.log(user.role);
+  if (!user || user.role !== "Faculty") {
     console.warn("Blocked: Only faculty can publish quizzes.");
-    return { success: false, message: "Only faculty can publish/unpublish quizzes." };
+    return {
+      success: false,
+      message: "Only faculty can publish/unpublish quizzes.",
+    };
   }
 
   quiz.published = !quiz.published;
+  console.log(quiz);
   return { success: true, published: quiz.published };
 }
