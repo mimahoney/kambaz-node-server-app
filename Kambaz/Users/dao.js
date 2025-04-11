@@ -16,6 +16,7 @@
 
 import model from "./model.js";
 // import db from "../Database/index.js";
+// test
 
 export const createUser = (user) => {} // implemented later
 export const findAllUsers = () => model.find();
