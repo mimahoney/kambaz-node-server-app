@@ -45,3 +45,6 @@ export function updateAssignment(assignmentId, updates) {
   return model.updateOne({ _id: assignmentId }, { $set: updates });
 }
 
+export function findAssignmentById(aid) {
+  return model.findById(aid);
+}
