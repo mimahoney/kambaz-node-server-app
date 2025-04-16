@@ -46,5 +46,5 @@ export function updateAssignment(assignmentId, updates) {
 }
 
 export function findAssignmentById(aid) {
-  return model.findById(aid);
+  return model.findOne({ _id: aid });
 }
