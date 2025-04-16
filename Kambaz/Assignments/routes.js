@@ -67,6 +67,7 @@ export default function AssignmentRoutes(app) {
     const status = await dao.deleteAssignment(aid);
     res.send(status);
   });
+  
   app.get("/api/assignments/:aid", async (req, res) => {
     const assignment = await dao.findAssignmentById(req.params.aid);
     res.json(assignment);
