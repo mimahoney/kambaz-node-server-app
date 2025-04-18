@@ -60,6 +60,33 @@ export default function QuizRoutes(app) {
     const result = dao.togglePublishQuiz(quizId, user);
     res.json(result);
   });
-   
+  
+
+  app.get("/api/quizzes/:quizId/questions", (req, res) => {
+    const { quizId } = req.params;
+    const questions = dao.findQuestionsForQuiz(quizId);
+    res.json(questions);
+  });
+
+
+  app.post("/api/quizzes/:quizId/questions", (req, res) => {
+    const { quizId } = req.params;
+    const newQuestion = {
+      ...req.body,
+      _id: uuidv4(),
+      quizId,
+    };
+    const created = dao.createQuestionForQuiz(newQuestion);
+    res.status(201).json(created);
+  });
+
+
+  app.delete("/api/quizzes/:quizId/questions/:questionId", (req, res) => {
+    const { quizId, questionId } = req.params;
+    dao.deleteQuestionFromQuiz(quizId, questionId);
+    res.sendStatus(204);
+  });
+
+
 }
 

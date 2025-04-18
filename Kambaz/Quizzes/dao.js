@@ -68,3 +68,18 @@ console.log(user.role);
   console.log(quiz);
   return { success: true, published: quiz.published };
 }
+
+export function findQuestionsForQuiz(quizId) {
+  return Database.questions.filter((q) => q.quizId === quizId);
+}
+
+export function createQuestionForQuiz(question) {
+  Database.questions.push(question);
+  return question;
+}
+
+export function deleteQuestionFromQuiz(quizId, questionId) {
+  Database.questions = Database.questions.filter(
+    (q) => !(q.quizId === quizId && q._id === questionId)
+  );
+}
