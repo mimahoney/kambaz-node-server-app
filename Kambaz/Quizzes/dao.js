@@ -25,7 +25,8 @@ export function findQuizById(quizId) {
   return Database.quizzes.find((quiz) => quiz._id === quizId);
 }
 
-// ✅ FIXED: Create a new quiz with guaranteed _id
+
+
 export function createQuiz(quiz, user) {
   if (!isFaculty(user)) {
     throw new Error("Unauthorized: Only faculty can create quizzes.");
@@ -33,31 +34,14 @@ export function createQuiz(quiz, user) {
 
   const newQuiz = {
     ...quiz,
-    _id: uuidv4(), // ✅ Always generate a unique ID
-    published: quiz.published ?? false, // ✅ Allow passed-in value or default to false
+    _id: uuidv4(),
+    published: quiz.published ?? false,
   };
+
+  console.log("✅ NEW QUIZ CREATED:", newQuiz); 
 
   Database.quizzes = [...Database.quizzes, newQuiz];
-  return newQuiz; // ✅ Return full quiz with _id
-}
-
-// Update a quiz
-export function updateQuiz(quizId, quizUpdates, user) {
-  if (!isFaculty(user)) {
-    throw new Error("Unauthorized: Only faculty can update quizzes.");
-  }
-
-  const index = Database.quizzes.findIndex((q) => q._id === quizId);
-  if (index === -1) return null;
-
-  const updated = {
-    ...Database.quizzes[index],
-    ...quizUpdates,
-    _id: quizId,
-  };
-
-  Database.quizzes[index] = updated;
-  return updated;
+  return newQuiz;
 }
 
 // Delete a quiz
@@ -101,4 +85,25 @@ export function deleteQuestionFromQuiz(quizId, questionId) {
   Database.questions = Database.questions.filter(
     (q) => !(q.quizId === quizId && q._id === questionId)
   );
+}
+
+export function updateQuiz(quizId, quizUpdates, user) {
+  if (!isFaculty(user)) {
+    throw new Error("Unauthorized: Only faculty can update quizzes.");
+  }
+
+  const index = Database.quizzes.findIndex((q) => q._id === quizId);
+  console.log("🔍 Found quiz index:", index); // <== Add this!
+
+  if (index === -1) return null;
+
+  const updated = {
+    ...Database.quizzes[index],
+    ...quizUpdates,
+    _id: quizId, // retain ID
+  };
+
+  Database.quizzes[index] = updated;
+  console.log("✅ Quiz updated in DB:", updated); // <== Add this!
+  return updated;
 }

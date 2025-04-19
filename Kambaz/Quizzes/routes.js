@@ -49,17 +49,17 @@ export default function QuizRoutes(app) {
   });
   
 
-  app.put("/api/quizzes/:quizId", (req, res) => {
-    const { quizId } = req.params;
-    const quizUpdates = req.body;
-    const user = req.session.currentUser;
-    try {
-      const updated = dao.updateQuiz(quizId, quizUpdates, user);
-      res.send(updated);
-    } catch (err) {
-      res.status(401).send({ error: err.message });
-    }
-  });
+  // app.put("/api/quizzes/:quizId", (req, res) => {
+  //   const { quizId } = req.params;
+  //   const quizUpdates = req.body;
+  //   const user = req.session.currentUser;
+  //   try {
+  //     const updated = dao.updateQuiz(quizId, quizUpdates, user);
+  //     res.send(updated);
+  //   } catch (err) {
+  //     res.status(401).send({ error: err.message });
+  //   }
+  // });
 
   app.delete("/api/quizzes/:quizId", (req, res) => {
     const { quizId } = req.params;
@@ -113,6 +113,18 @@ export default function QuizRoutes(app) {
     const { quizId, questionId } = req.params;
     dao.deleteQuestionFromQuiz(quizId, questionId);
     res.sendStatus(204);
+  });
+
+  app.put("/api/quizzes/:quizId", (req, res) => {
+    const { quizId } = req.params;
+    const quizUpdates = req.body;
+    const user = req.session.currentUser;
+    try {
+      const updated = dao.updateQuiz(quizId, quizUpdates, user);
+      res.send(updated);
+    } catch (err) {
+      res.status(401).send({ error: err.message });
+    }
   });
 
 
