@@ -6,6 +6,20 @@ export default function QuizRoutes(app) {
     res.send(quizzes);
   });
 
+
+  app.post("/api/courses/:courseId/quizzes/new", (req, res) => {
+    const { courseId } = req.params;
+    const user = req.session.currentUser;
+    try {
+      const newQuiz = dao.createQuiz({ ...req.body, course: courseId }, user);
+      res.send(newQuiz);
+    } catch (e) {
+      res.status(500).send({ error: e.message });
+    }
+  });
+  
+
+  
   app.get("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
     const user = req.session.currentUser;
@@ -13,13 +27,22 @@ export default function QuizRoutes(app) {
     res.json(quizzes);
   });
 
+  // app.post("/api/courses/:courseId/quizzes", (req, res) => {
+  //   const { courseId } = req.params;
+  //   const newQuiz = dao.createQuiz({
+  //     ...req.body,
+  //     course: courseId
+  //   });
+  //   res.send(newQuiz);
+  // });
+
   app.post("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
     const user = req.session.currentUser;
     try {
       const newQuiz = dao.createQuiz({ ...req.body, course: courseId }, user);
-      console.log("📤 Created quiz:", newQuiz);
-      res.send(newQuiz); // ✅ sends full object including _id
+      console.log(" Created quiz:", newQuiz);
+      res.send(newQuiz); 
     } catch (err) {
       res.status(401).send({ error: err.message });
     }
@@ -65,6 +88,35 @@ export default function QuizRoutes(app) {
     const result = dao.togglePublishQuiz(quizId, user);
     res.json(result);
   });
+  
+
+  app.get("/api/quizzes/:quizId/questions", (req, res) => {
+    const { quizId } = req.params;
+    const questions = dao.findQuestionsForQuiz(quizId);
+    res.json(questions);
+  });
+
+
+  app.post("/api/quizzes/:quizId/questions", (req, res) => {
+    const { quizId } = req.params;
+    const newQuestion = {
+      ...req.body,
+      _id: uuidv4(),
+      quizId,
+    };
+    const created = dao.createQuestionForQuiz(newQuestion);
+    res.status(201).json(created);
+  });
+
+
+  app.delete("/api/quizzes/:quizId/questions/:questionId", (req, res) => {
+    const { quizId, questionId } = req.params;
+    dao.deleteQuestionFromQuiz(quizId, questionId);
+    res.sendStatus(204);
+  });
+
+
+}
 
   
-}
+
