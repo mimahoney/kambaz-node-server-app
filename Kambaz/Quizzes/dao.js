@@ -1,63 +1,83 @@
 import Database from "../Database/index.js";
 import { v4 as uuidv4 } from "uuid";
 
+// Helper to check if user is Faculty
 function isFaculty(user) {
   return user?.role === "Faculty";
 }
 
+// Get all quizzes for a course
 export function findQuizzesForCourse(courseId, user) {
-  if (user?.role === "Faculty") {
+  if (isFaculty(user)) {
     return Database.quizzes.filter((q) => q.course === courseId);
   } else {
     return Database.quizzes.filter((q) => q.course === courseId && q.published);
   }
 }
 
-
+// Get all quizzes
 export function findAllQuizzes() {
   return Database.quizzes;
 }
 
+// Find one quiz by ID
 export function findQuizById(quizId) {
   return Database.quizzes.find((quiz) => quiz._id === quizId);
 }
 
-export function createQuiz(quiz) {
-  if (!isFaculty()) {
+// ✅ FIXED: Create a new quiz with guaranteed _id
+export function createQuiz(quiz, user) {
+  if (!isFaculty(user)) {
     throw new Error("Unauthorized: Only faculty can create quizzes.");
   }
-  const newQuiz = { ...quiz, _id: uuidv4(), published: false };
+
+  const newQuiz = {
+    ...quiz,
+    _id: uuidv4(), // ✅ Always generate a unique ID
+    published: quiz.published ?? false, // ✅ Allow passed-in value or default to false
+  };
+
   Database.quizzes = [...Database.quizzes, newQuiz];
-  return newQuiz;
+  return newQuiz; // ✅ Return full quiz with _id
 }
 
-export function updateQuiz(quizId, quizUpdates) {
-  if (!isFaculty()) {
+// Update a quiz
+export function updateQuiz(quizId, quizUpdates, user) {
+  if (!isFaculty(user)) {
     throw new Error("Unauthorized: Only faculty can update quizzes.");
   }
-  const quiz = Database.quizzes.find((q) => q._id === quizId);
-  if (!quiz) return null;
-  Object.assign(quiz, quizUpdates);
-  return quiz;
+
+  const index = Database.quizzes.findIndex((q) => q._id === quizId);
+  if (index === -1) return null;
+
+  const updated = {
+    ...Database.quizzes[index],
+    ...quizUpdates,
+    _id: quizId,
+  };
+
+  Database.quizzes[index] = updated;
+  return updated;
 }
 
-export function deleteQuiz(quizId) {
-  if (!isFaculty()) {
+// Delete a quiz
+export function deleteQuiz(quizId, user) {
+  if (!isFaculty(user)) {
     throw new Error("Unauthorized: Only faculty can delete quizzes.");
   }
+
   Database.quizzes = Database.quizzes.filter((q) => q._id !== quizId);
 }
 
-
+// Toggle publish/unpublish
 export function togglePublishQuiz(quizId, user) {
   const quiz = Database.quizzes.find((q) => q._id === quizId);
 
   if (!quiz) {
     return { success: false, message: "Quiz not found." };
   }
-console.log(user.role);
-  if (!user || user.role !== "Faculty") {
-    console.warn("Blocked: Only faculty can publish quizzes.");
+
+  if (!isFaculty(user)) {
     return {
       success: false,
       message: "Only faculty can publish/unpublish quizzes.",
@@ -65,6 +85,6 @@ console.log(user.role);
   }
 
   quiz.published = !quiz.published;
-  console.log(quiz);
   return { success: true, published: quiz.published };
 }
+
