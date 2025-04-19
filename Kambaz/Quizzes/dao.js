@@ -22,8 +22,8 @@ export function findQuizById(quizId) {
   return Database.quizzes.find((quiz) => quiz._id === quizId);
 }
 
-export function createQuiz(quiz) {
-  if (!isFaculty()) {
+export function createQuiz(quiz, user) {
+  if (!isFaculty(user)) {
     throw new Error("Unauthorized: Only faculty can create quizzes.");
   }
   const newQuiz = { ...quiz, _id: uuidv4(), published: false };
@@ -31,8 +31,8 @@ export function createQuiz(quiz) {
   return newQuiz;
 }
 
-export function updateQuiz(quizId, quizUpdates) {
-  if (!isFaculty()) {
+export function updateQuiz(quizId, quizUpdates, user) {
+  if (!isFaculty(user)) {
     throw new Error("Unauthorized: Only faculty can update quizzes.");
   }
   const quiz = Database.quizzes.find((q) => q._id === quizId);

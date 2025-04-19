@@ -6,12 +6,18 @@ export default function QuizRoutes(app) {
     res.send(quizzes);
   });
 
-  //needs fixed
-  app.get("/api/quizzes/new", (req, res) => {
+
+  app.post("/api/courses/:courseId/quizzes/new", (req, res) => {
     const { courseId } = req.params;
-    const newQuiz = dao.createQuiz({ ...req.body, course: courseId });
-    res.send(newQuiz);
+    const user = req.session.currentUser;
+    try {
+      const newQuiz = dao.createQuiz({ ...req.body, course: courseId }, user);
+      res.send(newQuiz);
+    } catch (e) {
+      res.status(500).send({ error: e.message });
+    }
   });
+  
 
   
   app.get("/api/courses/:courseId/quizzes", (req, res) => {
@@ -22,20 +28,41 @@ export default function QuizRoutes(app) {
   });
   
 
+  // app.post("/api/courses/:courseId/quizzes", (req, res) => {
+  //   const { courseId } = req.params;
+  //   const newQuiz = dao.createQuiz({
+  //     ...req.body,
+  //     course: courseId
+  //   });
+  //   res.send(newQuiz);
+  // });
+
   app.post("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
-    const newQuiz = dao.createQuiz({
-      ...req.body,
-      course: courseId
-    });
-    res.send(newQuiz);
+    const user = req.session.currentUser;
+  
+    try {
+      const newQuiz = dao.createQuiz(
+        { ...req.body, course: courseId },
+        user
+      );
+      res.send(newQuiz);
+    } catch (e) {
+      res.status(500).send({ error: e.message });
+    }
   });
 
   app.put("/api/quizzes/:quizId", (req, res) => {
     const { quizId } = req.params;
     const quizUpdates = req.body;
-    const updated = dao.updateQuiz(quizId, quizUpdates);
-    res.send(updated);
+    const user = req.session.currentUser;
+  
+    try {
+      const updated = dao.updateQuiz(quizId, quizUpdates, user);
+      res.send(updated);
+    } catch (e) {
+      res.status(500).send({ error: e.message });
+    }
   });
 
   app.delete("/api/quizzes/:quizId", (req, res) => {
