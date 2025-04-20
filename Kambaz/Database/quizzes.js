@@ -18,7 +18,7 @@ export default [
     "available": "2025-03-01",
     "availableUntil": "2025-04-20",
     "course": "RS101",
-    "published": false,
+    "published": true,
 
   },
   {

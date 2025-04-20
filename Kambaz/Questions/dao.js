@@ -17,10 +17,10 @@ export function findQuestionsForQuiz(qid) {
 
 
 
-export function createQuestionForQuiz(quizId, question) {
+export function createQuestionForQuiz(qid, question) {
   const baseQuestion = {
     _id: question._id || uuidv4(),
-    qid: quizId,
+    qid: qid,
     qtitle: question.qtitle || "",
     points: question.points || 0,
     question_text: question.question_text || "",
@@ -50,8 +50,8 @@ export function createQuestionForQuiz(quizId, question) {
 }
 
 
-export function deleteQuestionForQuiz(quizId, questionId) {
+export function deleteQuestionForQuiz(qid, questionId) {
   Database.questions = Database.questions.filter(
-    (q) => !(q.qid === quizId && q._id === questionId)
+    (q) => !(q.qid === qid && q._id === questionId)
   );
 }

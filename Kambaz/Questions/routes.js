@@ -3,21 +3,21 @@ import { v4 as uuidv4 } from "uuid";
 
 
 export default function QuestionRoutes(app) {
-  app.get("/api/quizzes/:quizId/questions", (req, res) => {
-    const { quizId } = req.params;
-    const questions = dao.findQuestionsForQuiz(quizId);
+  app.get("/api/quizzes/:qid/questions", (req, res) => {
+    const { qid } = req.params;
+    const questions = dao.findQuestionsForQuiz(qid);
     res.send(questions);
   });
 
-  app.post("/api/quizzes/:quizId/questions", (req, res) => {
-    const { quizId } = req.params;
-    const question = dao.createQuestionForQuiz(quizId, req.body);
+  app.post("/api/quizzes/:qid/questions", (req, res) => {
+    const { qid } = req.params;
+    const question = dao.createQuestionForQuiz(qid, req.body);
     res.send(question);
   });
 
-  app.delete("/api/quizzes/:quizId/questions/:questionId", (req, res) => {
-    const { quizId, questionId } = req.params;
-    dao.deleteQuestionForQuiz(quizId, questionId);
+  app.delete("/api/quizzes/:qid/questions/:questionId", (req, res) => {
+    const { qid, questionId } = req.params;
+    dao.deleteQuestionForQuiz(qid, questionId);
     res.sendStatus(204);
   });
 }
