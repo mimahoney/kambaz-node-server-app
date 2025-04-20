@@ -19,6 +19,7 @@ export default [
     availableUntil: "2025-04-20",
     course: "RS101",
     published: true,
+    maxAttempts: 3,
     attempts: [
       {
         _id: "attempt101a",
@@ -49,6 +50,7 @@ export default [
     availableUntil: "2025-04-20",
     course: "RS101",
     published: true,
+    maxAttempts: 3,
     attempts: [
       {
         _id: "attempt102a",
