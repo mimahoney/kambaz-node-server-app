@@ -72,9 +72,10 @@ export function togglePublishQuiz(quizId, user) {
   return { success: true, published: quiz.published };
 }
 
-export function findQuestionsForQuiz(quizId) {
-  return Database.questions.filter((q) => q.quizId === quizId);
+export function findQuestionsForQuiz(qid) {
+  return Database.questions.filter((q) => q.qid === qid);
 }
+
 
 export function createQuestionForQuiz(question) {
   Database.questions.push(question);

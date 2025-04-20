@@ -5,6 +5,7 @@ import users from "./users.js";
 import grades from "./grades.js";
 import enrollments from "./enrollments.js";
 import quizzes from "./quizzes.js"
+import questions from "./questions.js"
 
 
 
@@ -45,6 +46,6 @@ if (process.env.NODE_ENV !== "development") {
 }
 app.use(session(sessionOptions));
 app.use(express.json());
-export default { courses, modules, assignments, users, grades, enrollments, quizzes };
+export default { courses, modules, assignments, users, grades, enrollments, quizzes, questions };
 
 
