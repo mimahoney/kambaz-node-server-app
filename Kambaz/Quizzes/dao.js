@@ -1,12 +1,10 @@
 import Database from "../Database/index.js";
 import { v4 as uuidv4 } from "uuid";
 
-// Helper to check if user is Faculty
 function isFaculty(user) {
   return user?.role === "Faculty";
 }
 
-// Get all quizzes for a course
 export function findQuizzesForCourse(courseId, user) {
   if (isFaculty(user)) {
     return Database.quizzes.filter((q) => q.course === courseId);
@@ -15,17 +13,13 @@ export function findQuizzesForCourse(courseId, user) {
   }
 }
 
-// Get all quizzes
 export function findAllQuizzes() {
   return Database.quizzes;
 }
 
-// Find one quiz by ID
 export function findQuizById(quizId) {
   return Database.quizzes.find((quiz) => quiz._id === quizId);
 }
-
-
 
 export function createQuiz(quiz, user) {
   if (!isFaculty(user)) {
@@ -36,56 +30,11 @@ export function createQuiz(quiz, user) {
     ...quiz,
     _id: uuidv4(),
     published: quiz.published ?? false,
+    attempts: [],
   };
-
-  console.log("✅ NEW QUIZ CREATED:", newQuiz); 
 
   Database.quizzes = [...Database.quizzes, newQuiz];
   return newQuiz;
-}
-
-// Delete a quiz
-export function deleteQuiz(quizId, user) {
-  if (!isFaculty(user)) {
-    throw new Error("Unauthorized: Only faculty can delete quizzes.");
-  }
-
-  Database.quizzes = Database.quizzes.filter((q) => q._id !== quizId);
-}
-
-// Toggle publish/unpublish
-export function togglePublishQuiz(quizId, user) {
-  const quiz = Database.quizzes.find((q) => q._id === quizId);
-
-  if (!quiz) {
-    return { success: false, message: "Quiz not found." };
-  }
-
-  if (!isFaculty(user)) {
-    return {
-      success: false,
-      message: "Only faculty can publish/unpublish quizzes.",
-    };
-  }
-
-  quiz.published = !quiz.published;
-  return { success: true, published: quiz.published };
-}
-
-export function findQuestionsForQuiz(qid) {
-  return Database.questions.filter((q) => q.qid === qid);
-}
-
-
-export function createQuestionForQuiz(question) {
-  Database.questions.push(question);
-  return question;
-}
-
-export function deleteQuestionFromQuiz(quizId, questionId) {
-  Database.questions = Database.questions.filter(
-    (q) => !(q.quizId === quizId && q._id === questionId)
-  );
 }
 
 export function updateQuiz(quizId, quizUpdates, user) {
@@ -94,17 +43,52 @@ export function updateQuiz(quizId, quizUpdates, user) {
   }
 
   const index = Database.quizzes.findIndex((q) => q._id === quizId);
-  console.log("🔍 Found quiz index:", index); // <== Add this!
-
   if (index === -1) return null;
 
   const updated = {
     ...Database.quizzes[index],
     ...quizUpdates,
-    _id: quizId, // retain ID
+    _id: quizId,
   };
 
   Database.quizzes[index] = updated;
-  console.log("✅ Quiz updated in DB:", updated); // <== Add this!
   return updated;
+}
+
+export function deleteQuiz(quizId, user) {
+  if (!isFaculty(user)) {
+    throw new Error("Unauthorized: Only faculty can delete quizzes.");
+  }
+  Database.quizzes = Database.quizzes.filter((q) => q._id !== quizId);
+}
+
+export function togglePublishQuiz(quizId, user) {
+  const quiz = Database.quizzes.find((q) => q._id === quizId);
+  if (!quiz) return { success: false, message: "Quiz not found." };
+  if (!isFaculty(user)) return { success: false, message: "Only faculty can publish/unpublish quizzes." };
+  quiz.published = !quiz.published;
+  return { success: true, published: quiz.published };
+}
+
+export function createQuizAttempt(quizId, userId, score) {
+  const quiz = Database.quizzes.find((q) => q._id === quizId);
+  if (!quiz) throw new Error("Quiz not found");
+
+  const pastAttempts = quiz.attempts?.filter((a) => a.userId === userId) || [];
+  const maxAttempts = quiz.multipleAttempts ? Infinity : 1;
+
+  if (pastAttempts.length >= maxAttempts) {
+    throw new Error("Attempt limit reached");
+  }
+
+  const newAttempt = {
+    _id: uuidv4(),
+    quizId,
+    userId,
+    score,
+    submittedAt: new Date().toISOString(),
+  };
+
+  quiz.attempts = [...(quiz.attempts || []), newAttempt];
+  return newAttempt;
 }

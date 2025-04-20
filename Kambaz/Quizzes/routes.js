@@ -1,27 +1,12 @@
 import * as dao from "./dao.js";
 import { v4 as uuidv4 } from "uuid";
 
-
 export default function QuizRoutes(app) {
   app.get("/api/quizzes", (req, res) => {
     const quizzes = dao.findAllQuizzes();
     res.send(quizzes);
   });
 
-
-  app.post("/api/courses/:courseId/quizzes/new", (req, res) => {
-    const { courseId } = req.params;
-    const user = req.session.currentUser;
-    try {
-      const newQuiz = dao.createQuiz({ ...req.body, course: courseId }, user);
-      res.send(newQuiz);
-    } catch (e) {
-      res.status(500).send({ error: e.message });
-    }
-  });
-  
-
-  
   app.get("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
     const user = req.session.currentUser;
@@ -29,46 +14,12 @@ export default function QuizRoutes(app) {
     res.json(quizzes);
   });
 
-  // app.post("/api/courses/:courseId/quizzes", (req, res) => {
-  //   const { courseId } = req.params;
-  //   const newQuiz = dao.createQuiz({
-  //     ...req.body,
-  //     course: courseId
-  //   });
-  //   res.send(newQuiz);
-  // });
-
   app.post("/api/courses/:courseId/quizzes", (req, res) => {
     const { courseId } = req.params;
     const user = req.session.currentUser;
     try {
       const newQuiz = dao.createQuiz({ ...req.body, course: courseId }, user);
-      console.log(" Created quiz:", newQuiz);
-      res.send(newQuiz); 
-    } catch (err) {
-      res.status(401).send({ error: err.message });
-    }
-  });
-  
-
-  // app.put("/api/quizzes/:quizId", (req, res) => {
-  //   const { quizId } = req.params;
-  //   const quizUpdates = req.body;
-  //   const user = req.session.currentUser;
-  //   try {
-  //     const updated = dao.updateQuiz(quizId, quizUpdates, user);
-  //     res.send(updated);
-  //   } catch (err) {
-  //     res.status(401).send({ error: err.message });
-  //   }
-  // });
-
-  app.delete("/api/quizzes/:quizId", (req, res) => {
-    const { quizId } = req.params;
-    const user = req.session.currentUser;
-    try {
-      dao.deleteQuiz(quizId, user);
-      res.sendStatus(204);
+      res.send(newQuiz);
     } catch (err) {
       res.status(401).send({ error: err.message });
     }
@@ -77,45 +28,8 @@ export default function QuizRoutes(app) {
   app.get("/api/quizzes/:quizId", (req, res) => {
     const { quizId } = req.params;
     const quiz = dao.findQuizById(quizId);
-    if (quiz) {
-      res.send(quiz);
-    } else {
-      res.status(404).send({ error: "Couldn't find quiz" });
-    }
+    quiz ? res.send(quiz) : res.status(404).send({ error: "Couldn't find quiz" });
   });
-
-  app.put("/api/quizzes/:quizId/toggle", (req, res) => {
-    const { quizId } = req.params;
-    const user = req.session.currentUser;
-    const result = dao.togglePublishQuiz(quizId, user);
-    res.json(result);
-  });
-  
-
-  // app.get("/api/quizzes/:quizId/questions", (req, res) => {
-  //   const { quizId } = req.params;
-  //   const questions = dao.findQuestionsForQuiz(quizId);
-  //   res.json(questions);
-  // });
-
-
-  // app.post("/api/quizzes/:quizId/questions", (req, res) => {
-  //   const { quizId } = req.params;
-  //   const newQuestion = {
-  //     ...req.body,
-  //     _id: uuidv4(),
-  //     quizId,
-  //   };
-  //   const created = dao.createQuestionForQuiz(newQuestion);
-  //   res.status(201).json(created);
-  // });
-
-
-  // app.delete("/api/quizzes/:quizId/questions/:questionId", (req, res) => {
-  //   const { quizId, questionId } = req.params;
-  //   dao.deleteQuestionFromQuiz(quizId, questionId);
-  //   res.sendStatus(204);
-  // });
 
   app.put("/api/quizzes/:quizId", (req, res) => {
     const { quizId } = req.params;
@@ -129,8 +43,41 @@ export default function QuizRoutes(app) {
     }
   });
 
+  app.put("/api/quizzes/:quizId/toggle", (req, res) => {
+    const { quizId } = req.params;
+    const user = req.session.currentUser;
+    const result = dao.togglePublishQuiz(quizId, user);
+    res.json(result);
+  });
 
+  app.delete("/api/quizzes/:quizId", (req, res) => {
+    const { quizId } = req.params;
+    const user = req.session.currentUser;
+    try {
+      dao.deleteQuiz(quizId, user);
+      res.sendStatus(204);
+    } catch (err) {
+      res.status(401).send({ error: err.message });
+    }
+  });
+
+  // Create quiz attempt
+  app.post("/api/quizzes/:quizId/attempts", (req, res) => {
+    const { quizId } = req.params;
+    const { score } = req.body;
+    const user = req.session.currentUser;
+
+    console.log("Incoming attempt:", { quizId, score, user });
+
+    if (!user || typeof score !== "number") {
+      return res.status(400).send({ error: "Invalid user or score." });
+    }
+
+    try {
+      const attempt = dao.createQuizAttempt(quizId, user._id, score);
+      res.status(201).send(attempt);
+    } catch (err) {
+      res.status(400).send({ error: err.message });
+    }
+  });
 }
-
-  
-
