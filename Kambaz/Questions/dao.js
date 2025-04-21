@@ -55,3 +55,18 @@ export function deleteQuestionForQuiz(qid, questionId) {
     (q) => !(q.qid === qid && q._id === questionId)
   );
 }
+export function updateQuestionForQuiz(quizId, questionId, updates) {
+  const index = Database.questions.findIndex(
+    (q) => q.qid === quizId && q._id === questionId
+  );
+  if (index === -1) {
+    throw new Error("Question not found");
+  }
+
+  Database.questions[index] = {
+    ...Database.questions[index],
+    ...updates,
+  };
+
+  return Database.questions[index];
+}

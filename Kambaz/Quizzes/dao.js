@@ -88,6 +88,22 @@ export function deleteQuestionFromQuiz(quizId, questionId) {
   );
 }
 
+export function submitQuizAttempt(quizId, score) {
+  const quiz = Database.quizzes.find(q => q._id === quizId);
+  if (!quiz) return null;
+
+  const attempt = {
+    _id: uuidv4(),
+    score,
+    submittedAt: new Date().toISOString(),
+  };
+
+  quiz.attempts = quiz.attempts || [];
+  quiz.attempts.push(attempt);
+  return attempt;
+}
+
+
 export function updateQuiz(quizId, quizUpdates, user) {
   if (!isFaculty(user)) {
     throw new Error("Unauthorized: Only faculty can update quizzes.");
@@ -107,4 +123,24 @@ export function updateQuiz(quizId, quizUpdates, user) {
   Database.quizzes[index] = updated;
   console.log("✅ Quiz updated in DB:", updated); // <== Add this!
   return updated;
+}
+
+
+export function updateQuestionForQuiz(quizId, questionId, updatedQuestion) {
+  const index = Database.questions.findIndex(
+    (q) => q.qid === quizId && q._id === questionId
+  );
+
+  if (index === -1) return null;
+
+  const current = Database.questions[index];
+  const merged = {
+    ...current,
+    ...updatedQuestion,
+    _id: questionId, // Ensure ID is preserved
+    qid: quizId      // Ensure quiz ID is correct
+  };
+
+  Database.questions[index] = merged;
+  return merged;
 }
