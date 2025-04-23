@@ -21,31 +21,6 @@ export default [
     "published": true,
 
   },
-
-  {
-    "_id": "q103",
-    "title": "Sample Quiz 1=",
-    "description": "This quiz tests your knowledge.",
-    "quizType": "Graded Quiz",
-    "points": 20,
-    "assignmentGroup": "Quizzes",
-    "shuffleAnswers": true,
-    "timeLimit": 20,
-    "multipleAttempts": false,
-    "showCorrectAnswers": "After Last Attempt",
-    "accessCode": "",
-    "oneQuestionAtATime": true,
-    "webcamRequired": false,
-    "lockQuestionsAfterAnswering": false,
-    "due": "2025-04-18",
-    "available": "2025-03-01",
-    "availableUntil": "2025-04-20",
-    "course": "RS102",
-    "published": true,
-
-  },
-  
-  
   {
     "_id": "q102",
     "title": "Sample Quiz 2",
