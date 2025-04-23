@@ -8,7 +8,7 @@ export default [
     "assignmentGroup": "Quizzes",
     "shuffleAnswers": true,
     "timeLimit": 20,
-    "multipleAttempts": false,
+    "maxAttempts": 1,
     "showCorrectAnswers": "After Last Attempt",
     "accessCode": "",
     "oneQuestionAtATime": true,
@@ -19,7 +19,7 @@ export default [
     "availableUntil": "2025-04-20",
     "course": "RS101",
     "published": true,
-
+    "attempts": [],
   },
   {
     "_id": "q102",
@@ -30,7 +30,7 @@ export default [
     "assignmentGroup": "Quizzes",
     "shuffleAnswers": true,
     "timeLimit": 20,
-    "multipleAttempts": false,
+    "maxAttempts": 1,
     "showCorrectAnswers": "After Last Attempt",
     "accessCode": "",
     "oneQuestionAtATime": true,
@@ -41,7 +41,7 @@ export default [
     "availableUntil": "2025-04-20",
     "course": "RS101",
     "published": true,
-
+    "attempts": [],
   }
   ]
   
